@@ -60,19 +60,36 @@ dalberg/
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/petergt44/dalberg.git
 cd dalberg
 ```
 
-2. Install dependencies:
+2. Create a virtual environment (recommended):
 ```bash
-pip install pandas requests twilio aif360
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Configure environment variables:
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure environment variables:
+
+Create a `.env` file in the root directory:
+```env
+TWILIO_ACCOUNT_SID=your_account_sid
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_FROM_NUMBER=+1234567890
+API_KEY=your_api_key
+```
+
+Or export them in your shell:
 ```bash
 export TWILIO_ACCOUNT_SID=your_account_sid
 export TWILIO_AUTH_TOKEN=your_auth_token
+export TWILIO_FROM_NUMBER=+1234567890
 export API_KEY=your_api_key
 ```
 
@@ -133,18 +150,21 @@ print(insights['women_agency'])
 ```python
 from distribution.sms_delivery import send_sms_alert
 
-send_sms_alert(
+result = send_sms_alert(
     phone_number="+1234567890",
     message="Your insight alert message"
 )
+print(f"Message SID: {result['sid']}, Status: {result['status']}")
 ```
 
 ## Dependencies
 
+See `requirements.txt` for the complete list. Main dependencies include:
 - `pandas` - Data manipulation and analysis
 - `requests` - HTTP library for API calls
 - `twilio` - SMS delivery service
 - `aif360` - Bias detection and fairness metrics
+- `numpy` - Numerical computing
 
 ## Contributing
 

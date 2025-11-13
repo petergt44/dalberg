@@ -16,7 +16,7 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
         A preprocessed DataFrame.
     """
     # Handle missing values (e.g., imputation, removal)
-    df = df.fillna(method='ffill') 
+    df = df.ffill()  # Forward fill - deprecated method='ffill' replaced 
 
     # Convert data types (e.g., string to datetime)
     df['date_column'] = pd.to_datetime(df['date_column']) 

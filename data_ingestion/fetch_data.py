@@ -3,8 +3,12 @@ This module provides functions for fetching data from various sources.
 """
 
 import requests
+import logging
+from typing import Optional
 
-def fetch_data_from_api(url: str, api_key: str) -> dict:
+logger = logging.getLogger(__name__)
+
+def fetch_data_from_api(url: str, api_key: str, timeout: int = 30) -> Optional[dict]:
     """
     Fetches data from a REST API.
 
@@ -20,9 +24,15 @@ def fetch_data_from_api(url: str, api_key: str) -> dict:
     """
     headers = {"Authorization": f"Bearer {api_key}"}
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=timeout)
         response.raise_for_status()  # Raise an exception for bad status codes
         return response.json()
+    except requests.exceptions.Timeout:
+        logger.error(f"Request timeout for URL: {url}")
+        raise
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTP error {e.response.status_code} for URL: {url}")
+        raise
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching data from API: {e}")
+        logger.error(f"Error fetching data from API: {e}")
         raise
